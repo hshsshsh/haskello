@@ -17,7 +17,6 @@ loop bd = do line       <- getLine
              disk       <- return . snd $ parse line
              newBoard   <- return $ replace bd coordinate disk
              n          <- return 0 :: IO Int
-             directions <- return $ directionList!!1
              flipped    <- return $ flipping newBoard n coordinate disk
              printBoard flipped
              loop newBoard
