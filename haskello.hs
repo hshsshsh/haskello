@@ -1,3 +1,23 @@
+------------------------------------------------------------------------------
+-- haskello -- reversi game implementation with Haskell                     --
+--                                                                          --
+-- usage : compiling the source and execute command as follows:             --
+--          $./hasello                                                      --
+--         then, you will see reversi game board.                           --
+--         put disk with command shown below and start game.                --
+--         when you want to quit this programme, input C-d.                 --
+--                                                                          --
+-- command : xn D -- put disk command.                                      --
+--                   x is [a-h], n is [1-8] D is @ or O.                    --
+--                   xn represent coordinate where you want to put disk and --
+--                   D means the kind of the disk.                          --
+--                   <e.g.>                                                 --
+--                    if you put disk @ at a4 on board, input               --
+--                    a4 @                                                  --
+--                                                                          --
+--           C-d  -- quit game command.                                     --
+------------------------------------------------------------------------------
+
 import Data.Char -- for digitToInt, ord in crToCoor
 import Data.List.Split
 import Data.List -- for zipWith in numberer
@@ -5,7 +25,7 @@ import Data.List -- for zipWith in numberer
 type Board = [[Char]]
 type Coor = (Int,Int) -- abbreviation of "coordinate"
 
--- main statement and subroutine ("loop") --
+-- main statement and subroutine ("loop", "flipping"). --
 
 main :: IO ()
 main = do printBoard board
@@ -28,7 +48,7 @@ flipping bd n coordinate disk
                     flipped = flipDisk bd coordinate disk directions
                 in  flipping flipped (n+1) coordinate disk
 
--- parse user input and extract coordinate and kind of disk --
+-- parse user input and extract coordinate and kind of disk. --
 
 parse :: String -> (Coor,Char) -- input e.g. : "a1 @"
 parse line =
@@ -37,13 +57,13 @@ parse line =
       disk = head $ splited!!1
   in (coordinate, disk)
 
--- print current game board with header and line number  --
+-- print current game board with header and line number. --
 
 printBoard :: Board -> IO ()
 printBoard bd = do putStrLn header
                    putBoard $ numberer bd
 
-putBoard :: Board -> IO () -- sub routine of printBoard
+putBoard :: Board -> IO () -- subroutine of printBoard
 putBoard bd = putStr $ unlines bd
 
 header :: String
@@ -79,7 +99,7 @@ directionList =
   -- 3 x 4 --
   -- 5 6 7 --
 
--- create board with new disk and its position --
+-- create board with new disk and its position. --
 
 replace :: Board -> Coor -> Char -> Board
 replace bd (x,y) disk =
@@ -92,7 +112,7 @@ replace bd (x,y) disk =
       newBoard = c ++ newLine:ds
   in  newBoard
 
--- transform (column, row) form to coordinate form; e.g. "a7" -> (0,6) --
+-- transform column row form to coordinate form; e.g. "a7" -> (0,6) --
 
 crToCoor :: String -> Coor -- cr means Column & Row form
 crToCoor line = let column = head line
