@@ -39,7 +39,7 @@ loop bd = do line       <- getLine
              n          <- return 0 :: IO Int
              flipped    <- return $ flipping newBoard n coordinate disk
              printBoard flipped
-             loop newBoard
+             loop flipped
 
 flipping :: Board -> Int -> Coor -> Char -> Board
 flipping bd n coordinate disk
@@ -75,18 +75,28 @@ numberer bd = zipWith (:) ['1'..'8'] bd
 -- flipDisk --
 
 flipDisk :: Board -> Coor -> Char -> Coor -> Board
-flipDisk bd (x,y) disk directions@(xDirection,yDirection)
-  | not (fst further `elem` [0..7] && snd further `elem` [0..7]) = bd
-  | nextDisk == ' ' || furtherDisk == ' ' = bd
-  | nextDisk == disk = bd
-  | nextDisk == furtherDisk = flipDisk bd next disk directions
+flipDisk bd present@(x,y) disk directions@(xDirection,yDirection)
+  | not (fst next `elem` [0..7] && snd next `elem` [0..7]) = bd
+  | nextDisk == oposite = flipDisk bd next disk directions
+  | presentDisk == same = bd
+  | nextDisk == ' ' = bd
+  | backDisk == ' ' = bd
+  | backDisk == same = newBoard
   | otherwise = flipDisk newBoard back disk directions
-  where back = ( x - xDirection, y - yDirection )
-        next = ( x + xDirection, y + yDirection )
-        further = ( x + 2*xDirection, y + 2*yDirection )
+  where back = (x-xDirection,y-yDirection)
+        next = (x+xDirection,y+yDirection)
+        backDisk = getDisk bd back
         nextDisk = getDisk bd next
-        furtherDisk = getDisk bd further
-        newBoard = replace bd next disk
+        presentDisk = getDisk bd present
+        same = disk
+        oposite = flipColor disk
+        newBoard = replace bd present disk
+
+flipColor :: Char -> Char
+flipColor disk
+  | disk == '@' = 'O'
+  | disk == 'O' = '@'
+  | otherwise = disk
 
 getDisk :: Board -> Coor -> Char
 getDisk bd (x,y) = (bd!!y)!!x
