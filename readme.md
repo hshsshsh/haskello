@@ -16,6 +16,8 @@ usage :
 
 command :
 
+    (1)
+
     xn D
 
     -- put disk command.
@@ -28,6 +30,8 @@ command :
     if you put disk @ at a4 on board, input
 
     a4 @
+
+    (2)
 
     C-d
 
