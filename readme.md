@@ -1,6 +1,7 @@
 haskello -- reversi game implementation with Haskell
 
 usage :
+
     compile haskello.hs with ghc command here :
 
     $ghc --make haskello.hs
